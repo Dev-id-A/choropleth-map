@@ -1,19 +1,15 @@
 //Variables
     const width = 1000;
     const height = 700;
+    const padding = 200;
 
 //Svg created 
 
     const svg = d3.select("body")
                     .append("svg")
-                    .attr("width", "100%")
-                    .attr("height", "100%")
-                    .attr("viewBox", `0 0 ${width} ${height}`)
-                    .attr("preserveAspectRatio", "xMidYMid meet");
-//Title
-
-//Description
-
+                    .attr("width", width)
+                    .attr("height", height)
+                    .attr("transform", `translate(${width/3} ${padding/5})`);
 //Map fetched
 
 
@@ -32,8 +28,8 @@
 //Styling map
                     .attr("fill", "white")
                     .attr("stroke", "black")
-                    .attr("stroke-width", 0.2)
-            }
+                    .attr("stroke-width", 0.2);
+        }
             catch(error){
             window.alert("There was an error trying to obtain data.");
         };    
