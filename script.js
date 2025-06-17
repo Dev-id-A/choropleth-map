@@ -72,6 +72,17 @@ Promise.all([
                     .attr("stroke", "black")
                     .attr("stroke-width", 0.3);
 
+//Legend text 
+                legend.selectAll("text")
+                        .data([minEData, ...colorThresholds, maxEData])
+                        .enter()
+                        .append("text")
+                        .attr("x", (d, i)=> i * (legendWidth + 1))
+                        .attr("y", legendHeight + 10)
+                        .text(d => Math.round(d) + "%")
+                        .attr("text-anchor", "middle")
+                        .style("font-size", "9px");
+
         }
             catch(error){
             window.alert("There was an error trying to obtain data." + error);
