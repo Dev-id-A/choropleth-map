@@ -31,15 +31,15 @@ Promise.all([
                                     .range(d3.schemeReds[7]);
 
             const educationMap = {};
-            eData.forEach(d => educationMap[d.fips] = d.bachelorsOrHigher);
+            eData.forEach(d => educationMap[d.fips] = d);
 
 //Append map to svg
-                svg.selectAll("path")
+            svg.selectAll("path")
                     .data(counties)
                     .enter()
                     .append("path")
                     .attr("data-fips", d => d.id)
-                    .attr("data-education", d => educationMap[d.id])
+                    .attr("data-education", d => educationMap[d.id].bachelorsOrHigher)
                     .attr("class", "county")
                     .attr("d", d3.geoPath())
 
@@ -48,7 +48,7 @@ Promise.all([
                     .attr("stroke", "black")
                     .attr("stroke-width", 0.2)
                     .attr("transform", "translate(100, 10) scale(0.8)")
-                    .attr("fill", d => colorScheme(educationMap[d.id]));
+                    .attr("fill", d => colorScheme(educationMap[d.id].bachelorsOrHigher));
 
 
 //Legend
@@ -83,9 +83,41 @@ Promise.all([
                         .attr("text-anchor", "middle")
                         .style("font-size", "9px");
 
+//Tooltip
+                const tooltip = d3.select("body")
+                                    .append("div")
+                                    .attr("id", "tooltip")
+
+//Tooltip styling
+                                    .style("position", "absolute")
+                                    .style("opacity", 0)
+                                    .style("padding", "1%")
+                                    .style("text-align", "center")
+                                    .style("font-size", "12px");
+
+//Tooltip addition
+                svg.selectAll("path")
+                    .on("mouseover", (e, d) =>{
+                        const htmlData = educationMap[d.id];
+                        console.log(htmlData);
+
+                        tooltip.attr("data-education", htmlData.bachelorsOrHigher)
+                                .style("opacity", 1)
+                                .style("display", "block")
+                                .style("background-color", "aliceblue")
+                                .html(`${htmlData.area_name}<br>
+                                     ${htmlData.state}: ${htmlData.bachelorsOrHigher}%`)
+                                .style("left", (e.pageX + 10) + "px")
+                                .style("top", (e.pageY + 10) + "px");            
+                    })
+                    .on("mouseout", e => 
+                        tooltip.style("opacity", 0)
+                                .style("display", "none")
+                    )
+
         }
             catch(error){
-            window.alert("There was an error trying to obtain data." + error);
+            window.alert("There was an error trying to obtain data. " + error);
         };    
 });
 
